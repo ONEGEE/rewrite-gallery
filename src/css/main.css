@@ -1,0 +1,46 @@
+html{
+  background: #555;
+  box-sizing: border-box;
+
+  font-family: helvetica;
+}
+
+*, *::before, *::after{
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.stage{
+  width: 100%;
+  height: 100%;
+
+  position: relative;
+}
+
+
+.imageFigure{
+  position: absolute;
+  width: 320px;
+  height: 360px;
+
+  padding: 40px;
+
+  background: #fff;
+
+  text-align: center;
+
+}
+
+.imageFigure-img{
+  width: 240px;
+  height: 240px;
+}
+
+.imageFigure-title{
+  font-size: 22px;
+  font-weight: 600;
+  color: #999;
+
+  padding-top: 20px;
+}
