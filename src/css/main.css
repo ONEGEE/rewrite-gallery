@@ -1,46 +1,108 @@
-html{
+html,
+body {
   background: #555;
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
 
   font-family: helvetica;
 }
 
-*, *::before, *::after{
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
   box-sizing: inherit;
   margin: 0;
   padding: 0;
 }
 
-.stage{
+/* stage start */
+.stage {
   width: 100%;
   height: 100%;
 
   position: relative;
 }
+/* stage end */
+
+/* imgFigure start */
+
+.img-sec{
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+  /* 翻转需要设置外围容器的透视角度，值越大离你越远透视角度也越小 */
+  perspective: 1800px;
 
 
-.imageFigure{
+}
+
+
+.img-Figure {
+  /* 只有绝对定位才能确保翻转同时保持同一个位置 */
   position: absolute;
   width: 320px;
   height: 360px;
-
   padding: 40px;
 
   background: #fff;
-
   text-align: center;
 
+  transition: top 0.6s ease-in-out, left 0.6s ease-in-out,
+    transform 0.5s ease-in-out;
+
+  /* 保持transform的3d透视, 没有这个属性则看不到背面，因为没有背面的视角 */
+  transform-style: preserve-3d;
+  /* 声明背面不可见关键属性 */
+
 }
 
-.imageFigure-img{
+.img-Figure.inverse {
+  /* 动态切换翻转className */
+  transform: rotateY(180deg);
+}
+
+.img-Figure img {
   width: 240px;
   height: 240px;
+  backface-visibility: hidden;
+
 }
 
-.imageFigure-title{
+.img-Figure figcaption {
   font-size: 22px;
-  font-weight: 600;
-  color: #999;
+  font-weight: 500;
 
-  padding-top: 20px;
+  color: #888;
 }
+
+.img-title {
+  padding-top: 20px;
+  backface-visibility: hidden;
+
+}
+
+.img-back {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  padding-top: 50px;
+
+  /* 只有绝对定位才能确保翻转同时保持同一个位置 */
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  /* 默认翻转到背面并保持翻转不可见 */
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+
+}
+/* imageFigure end */
