@@ -50,25 +50,23 @@ class Gallery extends Component {
     this.reArrange = this.reArrange.bind(this);
     this.setCenter = this.setCenter.bind(this);
     this.setInverse = this.setInverse.bind(this);
+
     // this.getimgFigureSize = this.getimgFigureSize.bind(this);
-    // this.getStageSize = this.getStageSize.bind(this);
   }
-  // 关于ref引用的全部先写死了，后面再集中来处理DOM引用问题
+
+  // ref可以正常使用，但是有明显延迟
   // getimgFigureSize(width, height) {
   //   this.imgFigureSize = {
   //     width,
   //     height
   //   };
   // }
-  // getStageSize(width, height) {
-  //   this.stageSize = {
-  //     width,
-  //     height
-  //   };
-  // }
 
+  getRangeRandom = (low, high) =>
+    Math.floor(Math.random() * (high - low) + low); //check
+
+  // 初始化this.state
   componentWillMount() {
-    // 初始化this.state
     let imgArrangeArr = Object.assign([], this.state.imgArrangeArr);
     imageDatas.forEach((singleImg, i) => {
       imgArrangeArr[i] = {
@@ -85,9 +83,7 @@ class Gallery extends Component {
     this.setState({ imgArrangeArr: imgArrangeArr });
   } //check
 
-  getRangeRandom = (low, high) =>
-    Math.floor(Math.random() * (high - low) + low); //check
-
+  // 各种计算取值范围
   componentDidMount() {
     // 获取 stage & img 宽高
     let stageW = this.stageSize.width,
@@ -98,11 +94,6 @@ class Gallery extends Component {
       halfImgW = Math.ceil(imgW / 2),
       imgH = this.imgFigureSize.height,
       halfImgH = Math.ceil(imgH / 2);
-
-    // console.log(`stageW: ${stageW}`);
-    // console.log(`stageH: ${stageH}`);
-    // console.log(`imgW: ${imgW}`);
-    // console.log(`imgH: ${imgH}`);
 
     // 水平左半部分水平取值范围
     this.Constant.hPosRange.leftSecX[0] = -halfImgW;
@@ -128,8 +119,6 @@ class Gallery extends Component {
 
   // 更新state触发重新排序
   reArrange(centerIndex) {
-    console.log("reArrange");
-
     // 复制一个this.state.imgArrangeArr状态数组
     let imgArrangeArr = Object.assign([], this.state.imgArrangeArr);
 
@@ -160,8 +149,8 @@ class Gallery extends Component {
 
     // 从数组中取出0个或1个元素排列在上部分
     let topImgFigureArr = [],
-        topIndex = 0,
-        topImgCount = this.getRangeRandom(0, 2);
+      topIndex = 0,
+      topImgCount = this.getRangeRandom(0, 2);
     if (topImgCount !== 0) {
       topIndex = this.getRangeRandom(1, imgArrangeArr.length - topImgCount);
       topImgFigureArr = imgArrangeArr.splice(topIndex, topImgCount);
@@ -191,29 +180,28 @@ class Gallery extends Component {
     }
 
     // 将取出来的数组装回数组并更新state状态，注意一定要按照先拿后放的逻辑，否则会篡位
-    if (topImgCount !== 0) imgArrangeArr.splice(topIndex, 0, topImgFigureArr[0]);
+    if (topImgCount !== 0)
+      imgArrangeArr.splice(topIndex, 0, topImgFigureArr[0]);
     imgArrangeArr.splice(centerIndex, 0, centerImgFigureArr[0]);
 
     this.setState({ imgArrangeArr: imgArrangeArr });
   }
 
-  // 这个闭包我还是无法理解!!!
+  // 这两个闭包我还是无法理解，只能抄着来...!!!
   setCenter(centerIndex) {
     return () => {
       this.reArrange(centerIndex);
     };
   }
-
-  setInverse(inverseIndex){
+  setInverse(index) {
     return () => {
       // toggle原先的isInverse
-      console.log('setInverse');
-      this.setState((prevState) => {
+      this.setState(prevState => {
         let imgArrangeArr = Object.assign([], this.state.imgArrangeArr);
-        imgArrangeArr[inverseIndex].isInverse = !imgArrangeArr[inverseIndex].isInverse
-        return {imgArrangeArr: imgArrangeArr}
-      })
-    }
+        imgArrangeArr[index].isInverse = !imgArrangeArr[index].isInverse;
+        return { imgArrangeArr: imgArrangeArr };
+      });
+    };
   }
 
   render() {
@@ -221,6 +209,7 @@ class Gallery extends Component {
     imageDatas.forEach((singleImage, i) => {
       this.imgFigures[i] = (
         <ImageFigure
+          index={i}
           data={singleImage}
           key={String(singleImage.fileName)}
           arrange={this.state.imgArrangeArr[i]}
@@ -232,16 +221,11 @@ class Gallery extends Component {
     });
 
     return (
-      <div
-        className="stage"
-        // ref={stageDOM =>
-        //   this.getStageSize(stageDOM.clientWidth, stageDOM.clientHeight)
-        // }
-      >
+      <div className="stage">
         <section className="img-sec">{this.imgFigures}</section>
       </div>
     );
-  } // check
+  }
 }
 
 export default Gallery;
