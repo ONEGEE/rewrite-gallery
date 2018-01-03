@@ -40,6 +40,7 @@ body {
   overflow: hidden;
   /* 翻转需要设置外围容器的透视角度，值越大离你越远透视角度也越小 */
   perspective: 1800px;
+  background: #D3D3D3;
 
 
 }
